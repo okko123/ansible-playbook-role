@@ -1,0 +1,48 @@
+    
+---
+- file: path=/etc/yum.repos.d state=absent
+- file: path=/etc/yum.repos.d state=directory mode=0755
+
+- sysctl: name=kernel.panic state=present value='5'
+- sysctl: name=net.ipv4.tcp_syncookies state=present value='1'
+- sysctl: name=net.ipv4.tcp_max_syn_backlog state=present value='262144'
+- sysctl: name=net.ipv4.ip_local_port_range state=present value='10000 65000'
+- sysctl: name=net.ipv4.tcp_timestamps state=present value='1'
+- sysctl: name=net.ipv4.tcp_tw_reuse state=present value='0'
+- sysctl: name=net.ipv6.conf.all.disable_ipv6 state=present value=1
+- sysctl: name=net.ipv6.conf.default.disable_ipv6 state=present value=1
+- sysctl: name=net.core.netdev_max_backlog state=present value='262144'
+- sysctl: name=net.core.rmem_max state=present value='8388608'
+- sysctl: name=net.core.wmem_max state=present value='8388608'
+- sysctl: name=net.core.somaxconn state=present value='262144'
+- sysctl: name=net.ipv6.conf.default.disable_ipv6 state=present value='1'
+- sysctl: name=net.ipv6.conf.all.disable_ipv6 state=present value='1'
+
+- name: Install basic packages
+  yum: name={{ item }} state=present
+  with_items:
+    - vim
+    - htop
+    - rsync
+    - mlocate
+    - ntp
+    - net-tools
+    - tcpdump
+    - strace
+
+- lineinfile: dest=/etc/ssh/sshd_config regexp='#UseDNS.*' line='UseDNS no'
+- lineinfile: dest=/etc/selinux/config regexp=^SELINUX= line="SELINUX=disabled"
+
+- name: disable firewalld service
+  service: name=firewalld enabled=no state=stopped
+
+- name: Set timezone to Asia/Shanghai
+  command: "timedatectl set-timezone Asia/Shanghai"
+  when: ansible_date_time.tz != 'CST'
+
+- name: Configure ntp file
+  template: src=ntp.conf.j2 dest=/etc/ntp.conf
+  tags: ntp
+
+- name: enable ntp service
+  service: name=ntpd enabled=yes state=started
