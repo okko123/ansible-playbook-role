@@ -1,0 +1,13 @@
+---
+- name: "create user groups"
+  group: "name={{ item.gname }} gid={{ item.gid }} state=present"     
+  with_items: 
+  - { gname: 'www', gid: '500' }
+  - { gname: 'mongod', gid: '510' }
+  - { gname: 'sudo', gid: '520' }
+
+- name: "create users and add into groups"
+  user: "name={{ item.name }} group={{ item.group }} uid={{ item.uid }} shell=/bin/bash state=present"
+  with_items:
+  - { name: 'www', uid: '500' }
+  - { name: 'mongod', uid: '510' }
