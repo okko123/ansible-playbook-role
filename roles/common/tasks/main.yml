@@ -22,13 +22,12 @@
   yum: name={{ item }} state=present
   with_items:
     - vim
-    - htop
     - rsync
     - mlocate
-    - ntp
     - net-tools
     - tcpdump
     - strace
+    - chrony
 
 - lineinfile: dest=/etc/ssh/sshd_config regexp='#UseDNS.*' line='UseDNS no'
 - lineinfile: dest=/etc/selinux/config regexp=^SELINUX= line="SELINUX=disabled"
