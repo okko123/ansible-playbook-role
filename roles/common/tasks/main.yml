@@ -2,6 +2,13 @@
 ---
 - file: path=/etc/yum.repos.d state=absent
 - file: path=/etc/yum.repos.d state=directory mode=0755
+- file: path={{ item }} state=directory mode=0755 owner=www group=www
+  with_items:
+    - /data/
+    - /data/logs
+    - /data/logs/erc
+    - /data/logs/nginx
+    - /data/logs/php
 
 - sysctl: name=kernel.panic state=present value='5'
 - sysctl: name=net.ipv4.tcp_syncookies state=present value='1'
@@ -31,7 +38,7 @@
 
 - lineinfile: dest=/etc/ssh/sshd_config regexp='#UseDNS.*' line='UseDNS no'
 - lineinfile: dest=/etc/selinux/config regexp=^SELINUX= line="SELINUX=disabled"
-- lineinfile: dest=/etc/profile line='export HISTTIMEFORMAT="%Y-%m-%d %H:%M:%S "'
+- lineinfile: dest=/etc/profile regexp=^'HISTTIMEFORMAT' line='export HISTTIMEFORMAT="%Y-%m-%d %H:%M:%S "'
 
 - name: disable firewalld service
   service: name=firewalld enabled=no state=stopped
