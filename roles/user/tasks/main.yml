@@ -7,7 +7,7 @@
   - { gname: 'sudo', gid: '520' }
 
 - name: "create users and add into groups"
-  user: "name={{ item.name }} group={{ item.group }} uid={{ item.uid }} shell=/sbin/nologin state=present"
+  user: "name={{ item.name }} group={{ item.name }} uid={{ item.uid }} shell=/sbin/nologin state=present"
   with_items:
   - { name: 'www', uid: '500' }
   - { name: 'mongod', uid: '510' }
