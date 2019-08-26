@@ -39,7 +39,7 @@
 - lineinfile: dest=/etc/ssh/sshd_config regexp='#PermitRootLogin.*' line='PermitRootLogin no'
 - lineinfile: dest=/etc/ssh/sshd_config regexp='^GSSAPIAuthentication.*' line='GSSAPIAuthentication no'
 - lineinfile: dest=/etc/selinux/config regexp=^SELINUX= line="SELINUX=disabled"
-- lineinfile: dest=/etc/profile regexp=^'HISTTIMEFORMAT' line='export HISTTIMEFORMAT="%Y-%m-%d %H:%M:%S "'
+- lineinfile: dest=/etc/profile regexp='^export HISTTIMEFORMAT' line='export HISTTIMEFORMAT="%Y-%m-%d %H:%M:%S "'
 
 - name: disable firewalld service
   service: name=firewalld enabled=no state=stopped
@@ -53,3 +53,6 @@
 
 - name: Modify nproc
   template: src=nproc.conf.j2 dest=/etc/security/limits.d/nproc.conf owner=root group=root mode=0644
+
+- name: logrotate logs
+  template: src=applogs.j2 dest=/etc/logrotate.d/applogs owner=root group=root mode=0644
