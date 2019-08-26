@@ -1,6 +1,5 @@
     
 ---
-- file: path=/etc/yum.repos.d state=absent
 - file: path=/etc/yum.repos.d state=directory mode=0755
 - file: path={{ item }} state=directory mode=0755 owner=www group=www
   with_items:
@@ -37,6 +36,8 @@
     - chrony
 
 - lineinfile: dest=/etc/ssh/sshd_config regexp='#UseDNS.*' line='UseDNS no'
+- lineinfile: dest=/etc/ssh/sshd_config regexp='#PermitRootLogin.*' line='PermitRootLogin no'
+- lineinfile: dest=/etc/ssh/sshd_config regexp='^GSSAPIAuthentication.*' line='GSSAPIAuthentication no'
 - lineinfile: dest=/etc/selinux/config regexp=^SELINUX= line="SELINUX=disabled"
 - lineinfile: dest=/etc/profile regexp=^'HISTTIMEFORMAT' line='export HISTTIMEFORMAT="%Y-%m-%d %H:%M:%S "'
 
